@@ -1,6 +1,7 @@
 
 package Dev_J130.util;
 
+import java.awt.Window;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -29,4 +30,14 @@ public class Utils {
         }
     }
     
+    //Метод ищет последнее открытое окно
+    public static Window findLatestWindow() {
+        Window result = null;
+        for (Window w : Window.getWindows()) {
+            if (w.isVisible()) {
+                result = w;
+            }
+        }
+        return result;
+    }
 }
