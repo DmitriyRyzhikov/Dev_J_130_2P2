@@ -1,4 +1,4 @@
-package Dev_J_130;
+package Dev_J130;
 
 import Dev_J130.frames.MainFrame;
 
