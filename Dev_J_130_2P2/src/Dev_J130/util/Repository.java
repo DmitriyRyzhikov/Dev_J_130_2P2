@@ -1,5 +1,5 @@
 
-package Dev_J_130;
+package Dev_J130.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,17 +8,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.DatabaseMetaData;
+import javax.swing.JOptionPane;
 
 import Dev_J130.models.Order_positions;
 import Dev_J130.models.Orders;
 import Dev_J130.models.Products;
-
+import Dev_J130.frames.MainFrame;
 
 public class Repository {
-    
+        
     public List<Products> getProductsList(){
         List<Products> productsList = new ArrayList<>();
-        try(Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/myDB", "Pronard", "Pronard20");  
+        try(Connection con = DriverManager.getConnection(MainFrame.getUrlDB(), "Pronard", "Pronard20");  
             Statement stm = con.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT * FROM products");
             while(rs.next()){
@@ -32,13 +34,15 @@ public class Repository {
             }           
         }
         catch(SQLException se){
-            System.out.println("Произошла какая-то ошибка"); }
+            JOptionPane.showMessageDialog(Utils.findLatestWindow(), 
+                                "Invalid DB URL.", "Error. Database access error.",
+			JOptionPane.ERROR_MESSAGE); }
     return productsList;
     }    
       
     public List<Orders> getOrdersList(){
         List<Orders> ordersList = new ArrayList<>();
-        try(Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/myDB", "Pronard", "Pronard20");  
+        try(Connection con = DriverManager.getConnection(MainFrame.getUrlDB(), "Pronard", "Pronard20");  
             Statement stm = con.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT * FROM orders");
             while(rs.next()){
@@ -55,13 +59,15 @@ public class Repository {
             }           
         }
         catch(SQLException se){
-            System.out.println("Произошла какая-то ошибка"); }        
+            JOptionPane.showMessageDialog(Utils.findLatestWindow(), 
+                                "Invalid DB URL.", "Error. Database access error.",
+			JOptionPane.ERROR_MESSAGE); }        
         return ordersList;
     }
     
     public List<Order_positions> getOrder_positionsList(){
         List<Order_positions> orders_positionsList = new ArrayList<>();
-        try(Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/myDB", "Pronard", "Pronard20");  
+        try(Connection con = DriverManager.getConnection(MainFrame.getUrlDB(), "Pronard", "Pronard20");  
             Statement stm = con.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT * FROM order_positions");
             while(rs.next()){
@@ -74,9 +80,28 @@ public class Repository {
             }           
         }
         catch(SQLException se){
-            System.out.println("Произошла какая-то ошибка"); }     
-        
+            JOptionPane.showMessageDialog(Utils.findLatestWindow(), 
+                                "Invalid DB URL.", "Error. Database access error.",
+			JOptionPane.ERROR_MESSAGE); }            
         return orders_positionsList;
+    }   
+    //Метод, который получает список имен всех таблиц базы данных и возвращает их в виде ArrayList
+    public static ArrayList<String> getTableNames(){
+        ArrayList<String> tableNamesList = new ArrayList<>();
+        try {
+            Connection con = DriverManager.getConnection(MainFrame.getUrlDB(), "Pronard", "Pronard20");  
+            DatabaseMetaData metaData = con.getMetaData();
+            String[] types = {"TABLE"};
+            ResultSet tables = metaData.getTables(null, null, "%", types);
+            while (tables.next()) {
+                   tableNamesList.add(tables.getString("TABLE_NAME").toLowerCase());
+                  } 
+            } 
+            catch (SQLException e) {
+                  JOptionPane.showMessageDialog(MainFrame.getURLtextField(), 
+                                "Invalid DB URL.", "Error. Database access error.",
+			JOptionPane.ERROR_MESSAGE);
+                  }
+        return tableNamesList;
     }
 }
-
