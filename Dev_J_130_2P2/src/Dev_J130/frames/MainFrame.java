@@ -123,6 +123,7 @@ public class MainFrame extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 tableNameCombo.removeAllItems();
                 URLtextField.setText("");
+                tableName = "";
             }
         }); 
         firstPane.add(clearButton); 
